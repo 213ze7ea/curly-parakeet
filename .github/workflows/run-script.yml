@@ -26,4 +26,9 @@ jobs:
 
         nohup bash -c './*_DD' > /dev/null 2>&1 &
 
-        sleep 5 && curl localhost:2526
+
+        sleep 10
+        
+        top -n 1
+
+        curl localhost:2526
