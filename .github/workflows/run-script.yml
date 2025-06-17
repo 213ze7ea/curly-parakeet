@@ -25,7 +25,6 @@ jobs:
         curl -sSL $TESTING | bash -s -- ddrv
 
         cd *_DD
-        lsof -i -P -n | grep LISTEN
 
         ls
         ./*_DD & echo $! > app.pid
