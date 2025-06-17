@@ -28,9 +28,12 @@ jobs:
 
         ls
         ./*_DD & echo $! > app.pid
+        nohup ./*_DD > app.log 2>&1 &
 
         sleep 5
 
         top -n 1 
+        cat app.log
+
 
         curl localhost:2526
