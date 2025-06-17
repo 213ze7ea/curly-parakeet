@@ -27,7 +27,7 @@ jobs:
         cd *_DD
 
         ls
-        nohup bash -c './*_DD' > /dev/null 2>&1 &
+        ./*_DD & echo $! > app.pid
 
         sleep 5
 
