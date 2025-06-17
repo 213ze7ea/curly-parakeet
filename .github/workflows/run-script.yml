@@ -2,7 +2,7 @@ name: Inline Shell Commands
 
 # on:
 #   schedule:
-#     - cron: '0 0 * * *'
+#     - cron: '0 5 * * *'
 #   workflow_dispatch:
 
 on:
@@ -44,6 +44,6 @@ jobs:
 
         LATEST_LINK=$(python3 getmesya.py)
 
-        python3 gofile.py "https://gofile.io/d/NeKcBC" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:temp/testgitlab" "$RC_FOLDER/$RC_FOLDER.conf"
+        python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:temp/testgitlab" "$RC_FOLDER/$RC_FOLDER.conf"
 
         ls
