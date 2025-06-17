@@ -44,6 +44,6 @@ jobs:
 
         LATEST_LINK=$(python3 getmesya.py)
 
-        python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:temp/testgitlab" "$RC_FOLDER/$RC_FOLDER.conf" 
+        python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:Archive/FC2/1.Mirror" "$RC_FOLDER/$RC_FOLDER.conf" 
 
         ls
