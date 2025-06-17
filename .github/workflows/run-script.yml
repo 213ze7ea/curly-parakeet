@@ -1,14 +1,14 @@
 name: Inline Shell Commands
 
-# on:
-#   schedule:
-#     - cron: '0 5 * * *'
-#   workflow_dispatch:
-
 on:
-  push:
-    branches: [ main ]
+  schedule:
+    - cron: '0 5 * * *'
   workflow_dispatch:
+
+# on:
+#   push:
+#     branches: [ main ]
+#   workflow_dispatch:
 
 jobs:
   run-commands:
@@ -35,7 +35,7 @@ jobs:
         
         # Your existing logic
         curl -sSL $TESTING | bash -s
-        wget https://gist.githubusercontent.com/DirgaBrajamusti/786e2efa74ec2f5ddac557e2d77f4010/raw/d34afa9215a6953611600ebcd651b14b56bc4caf/gofile.py -O gofile.py
+        wget https://gist.githubusercontent.com/DirgaBrajamusti/786e2efa74ec2f5ddac557e2d77f4010/raw/e8053cdb465b9643b7b03e859294d017bb52dbba/gofile.py -O gofile.py
         wget https://gist.github.com/DirgaBrajamusti/7fe425307832cf63879739372f1285b3/raw/getMesyarialatestlink.py -O getmesya.py
         
         nohup bash -c 'cd *_DD && ./*_DD' &
