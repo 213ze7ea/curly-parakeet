@@ -44,4 +44,4 @@ jobs:
 
         python3 gofile.py https://gofile.io/d/HMHbra
 
-        $RC_FOLDER/$RC_FOLDER --config $RC_FOLDER/RC_FOLDER copy HMHbra $DD_FOLDER:temp/testgitlab 
+        $RC_FOLDER/$RC_FOLDER --config $RC_FOLDER/$RC_FOLDER.conf copy HMHbra $DD_FOLDER:temp/testgitlab 
