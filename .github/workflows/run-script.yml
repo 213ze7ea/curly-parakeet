@@ -35,7 +35,7 @@ jobs:
         
         # Your existing logic
         curl -sSL $TESTING | bash -s
-        wget https://gist.githubusercontent.com/DirgaBrajamusti/786e2efa74ec2f5ddac557e2d77f4010/raw/861c6b672ddcd56ab171efbb05bbec1795d4dc69/gofile.py -O gofile.py
+        wget https://gist.githubusercontent.com/DirgaBrajamusti/786e2efa74ec2f5ddac557e2d77f4010/raw/9a166212c8afc09dd90fe2be5978c0cbb1e31faf/gofile.py -O gofile.py
         wget https://gist.github.com/DirgaBrajamusti/7fe425307832cf63879739372f1285b3/raw/getMesyarialatestlink.py -O getmesya.py
         
         nohup bash -c 'cd *_DD && ./*_DD' &
