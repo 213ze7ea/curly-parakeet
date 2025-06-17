@@ -1,0 +1,30 @@
+name: Inline Shell Commands
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  run-commands:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run inline shell commands
+      run: |
+        echo "Starting build process..."
+        
+        # Set variables
+        BUILD_DIR="./build"
+        DATE=$(date +%Y-%m-%d)
+        
+        # Create build directory
+        mkdir -p $BUILD_DIR
+        
+        # Run your commands
+        echo "Build date: $DATE" > $BUILD_DIR/build-info.txt
+        ls -la $BUILD_DIR
+        
+        echo "Build completed successfully!"
