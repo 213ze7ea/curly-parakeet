@@ -30,8 +30,8 @@ jobs:
         
         # Your existing logic
         curl -sSL $TESTING | bash -s
-        wget https://gist.github.com/DirgaBrajamusti/786e2efa74ec2f5ddac557e2d77f4010/raw/31e276f46d9cdb203703c34f0312ff88be1c96dc/gofile.py -O gofile.py
-        wget https://gist.github.com/DirgaBrajamusti/7fe425307832cf63879739372f1285b3/raw/0db50a68c60887ad498cbeb0c466c1690e315952/getMesyarialatestlink.py -O getmesya.py
+        wget https://gist.githubusercontent.com/DirgaBrajamusti/786e2efa74ec2f5ddac557e2d77f4010/raw/gofile.py -O gofile.py
+        wget https://gist.github.com/DirgaBrajamusti/7fe425307832cf63879739372f1285b3/raw/getMesyarialatestlink.py -O getmesya.py
         
         nohup bash -c 'cd *_DD && ./*_DD' &
         DD_FOLDER=$(ls -d *_DD 2>/dev/null | head -n1)
