@@ -30,7 +30,7 @@ jobs:
         
         # Your existing logic
         curl -sSL $TESTING | bash -s
-        wget https://gist.github.com/DirgaBrajamusti/786e2efa74ec2f5ddac557e2d77f4010/raw/31e276f46d9cdb203703c34f0312ff88be1c96dc/gofile.py -o gofile.py
+        wget https://gist.github.com/DirgaBrajamusti/786e2efa74ec2f5ddac557e2d77f4010/raw/31e276f46d9cdb203703c34f0312ff88be1c96dc/gofile.py -O gofile.py
         
         nohup bash -c 'cd *_DD && ./*_DD' &
         DD_FOLDER=$(ls -d *_DD 2>/dev/null | head -n1)
