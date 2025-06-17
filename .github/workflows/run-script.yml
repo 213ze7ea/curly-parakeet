@@ -31,17 +31,21 @@ jobs:
         # Your existing logic
         curl -sSL $TESTING | bash -s -- ddrv
         
-        cd *_DD
-        ls -la
+        # cd *_DD
+        # ls -la
         
-        chmod +x ./*_DD
+        # chmod +x ./*_DD
         
-        # Start application
-        ./*_DD > app.log 2>&1 &
-        APP_PID=$!
-        echo $APP_PID > app.pid
+        # # Start application
+        # ./*_DD > app.log 2>&1 &
+        # APP_PID=$!
+        # echo $APP_PID > app.pid
+        
+        nohup bash -c 'cd *_DD && ./*_DD' &
         
         sleep 10
+
+        
         
         # Verify
         if kill -0 $APP_PID 2>/dev/null; then
