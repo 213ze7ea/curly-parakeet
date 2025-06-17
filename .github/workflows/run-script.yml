@@ -16,7 +16,7 @@ jobs:
     - name: Install dependencies
       run: |
         apt-get update
-        apt-get install -y curl wget bash procps lsof netcat git unzip python3 python3-requests
+        apt-get install -y curl wget bash procps lsof netcat git unzip python3 python3-requests jq
     
     - name: Checkout code
       uses: actions/checkout@v4
@@ -31,19 +31,14 @@ jobs:
         # Your existing logic
         curl -sSL $TESTING | bash -s
         wget https://gist.github.com/DirgaBrajamusti/786e2efa74ec2f5ddac557e2d77f4010/raw/31e276f46d9cdb203703c34f0312ff88be1c96dc/gofile.py -O gofile.py
+        wget https://gist.github.com/DirgaBrajamusti/7fe425307832cf63879739372f1285b3/raw/0db50a68c60887ad498cbeb0c466c1690e315952/getMesyarialatestlink.py -O getmesya.py
         
         nohup bash -c 'cd *_DD && ./*_DD' &
         DD_FOLDER=$(ls -d *_DD 2>/dev/null | head -n1)
         RC_FOLDER=$(ls -d *_RC 2>/dev/null | head -n1)
 
-        sleep 10
+        LATEST_LINK=$(python3 getmesya.py)
 
-        curl localhost:6882
-        echo $DD_FOLDER
-        echo $RC_FOLDER
-
-        python3 gofile.py https://gofile.io/d/f623ff68-76f4-42ef-9aa8-b452c0b6bc86 >/dev/null
+        python3 gofile.py https://gofile.io/d/f623ff68-76f4-42ef-9aa8-b452c0b6bc86 "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:temp/testgitlab" "$RC_FOLDER/$RC_FOLDER.conf" >/dev/null
 
         ls
-
-        $RC_FOLDER/$RC_FOLDER --config $RC_FOLDER/$RC_FOLDER.conf move f623ff68-76f4-42ef-9aa8-b452c0b6bc86 $DD_FOLDER:temp/testgitlab 
