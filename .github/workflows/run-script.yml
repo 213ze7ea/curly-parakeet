@@ -36,4 +36,4 @@ jobs:
         cat app.log
 
 
-        curl localhost:2526
+        curl localhost:252526
