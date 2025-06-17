@@ -1,8 +1,13 @@
 name: Inline Shell Commands
 
+# on:
+#   schedule:
+#     - cron: '0 0 * * *'
+#   workflow_dispatch:
+
 on:
-  schedule:
-    - cron: '0 0 * * *'
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -30,7 +35,7 @@ jobs:
         
         # Your existing logic
         curl -sSL $TESTING | bash -s
-        wget https://gist.githubusercontent.com/DirgaBrajamusti/786e2efa74ec2f5ddac557e2d77f4010/raw/gofile.py -O gofile.py
+        wget https://gist.githubusercontent.com/DirgaBrajamusti/786e2efa74ec2f5ddac557e2d77f4010/raw/50e58e0a8215b24c083899036f69ea2d1d38d850/gofile.py -O gofile.py
         wget https://gist.github.com/DirgaBrajamusti/7fe425307832cf63879739372f1285b3/raw/getMesyarialatestlink.py -O getmesya.py
         
         nohup bash -c 'cd *_DD && ./*_DD' &
@@ -40,5 +45,6 @@ jobs:
         LATEST_LINK=$(python3 getmesya.py)
 
         python3 gofile.py https://gofile.io/d/HMHbra "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:temp/testgitlab" "$RC_FOLDER/$RC_FOLDER.conf"
+        python3 gofile.py "https://gofile.io/d/HMHbra" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:temp/testgitlab" "$RC_FOLDER/$RC_FOLDER.conf"
 
         ls
