@@ -1,8 +1,13 @@
 name: Inline Shell Commands
 
+# on:
+#   push:
+#     branches: [ main ]
+
 on:
-  push:
-    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * *'  # Runs at 00:00 UTC every day
+  workflow_dispatch:  # Allows manual trigger
 
 jobs:
   run-commands:
@@ -27,4 +32,4 @@ jobs:
         echo "Build date: $DATE" > $BUILD_DIR/build-info.txt
         ls -la $BUILD_DIR
         
-        echo "Build completed successfully!"
+        echo "Build completed successfully! $TESTING"
