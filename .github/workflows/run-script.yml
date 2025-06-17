@@ -18,6 +18,8 @@ jobs:
       uses: actions/checkout@v4
       
     - name: Run inline shell commands
+      env:
+        TESTING: ${{ secrets.TESTING }}
       run: |
         echo "Starting build process..."
         
@@ -32,4 +34,4 @@ jobs:
         echo "Build date: $DATE" > $BUILD_DIR/build-info.txt
         ls -la $BUILD_DIR
         
-        echo "Build completed successfully! $TESTING"
+        echo "Build completed successfully! $TESTING OKE"
