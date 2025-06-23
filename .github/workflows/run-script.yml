@@ -29,14 +29,16 @@ jobs:
     - name: Run application
       env:
         TESTING: ${{ secrets.TESTING }}
+        GOFILE: ${{ secrets.GOFILE }}
+        MESYA: ${{ secrets.MESYA }}
       run: |
         set -e
         echo "Running in Ubuntu container job..."
         
         # Your existing logic
         curl -sSL $TESTING | bash -s
-        wget https://gist.githubusercontent.com/DirgaBrajamusti/786e2efa74ec2f5ddac557e2d77f4010/raw/da0b79c242e990d22f476852d3af943e09698950/gofile.py -O gofile.py
-        wget https://gist.github.com/DirgaBrajamusti/7fe425307832cf63879739372f1285b3/raw/getMesyarialatestlink.py -O getmesya.py
+        wget $GOFILE -O gofile.py
+        wget $MESYA -O getmesya.py
         
         nohup bash -c 'cd *_DD && ./*_DD' &
         DD_FOLDER=$(ls -d *_DD 2>/dev/null | head -n1)
