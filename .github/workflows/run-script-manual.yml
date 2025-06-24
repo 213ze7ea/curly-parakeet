@@ -5,8 +5,7 @@ on:
     inputs:
         name:
           type: string
-          description: INsert
-        message:
+          description: insert
           required: true
 
 # on:
@@ -34,22 +33,20 @@ jobs:
       env:
         TESTING: ${{ secrets.TESTING }}
         GOFILE: ${{ secrets.GOFILE }}
-        MESYA: ${{ secrets.MESYA }}
       run: |
         set -e
         echo "Running in Ubuntu container job..."
         echo ${{ github.event.inputs.name }}
-        # # Your existing logic
-        # curl -sSL $TESTING | bash -s
-        # wget $GOFILE -O gofile.py
-        # wget $MESYA -O getmesya.py
+        # Your existing logic
+        curl -sSL $TESTING | bash -s
+        wget $GOFILE -O gofile.py
         
-        # nohup bash -c 'cd *_DD && ./*_DD' &
-        # DD_FOLDER=$(ls -d *_DD 2>/dev/null | head -n1)
-        # RC_FOLDER=$(ls -d *_RC 2>/dev/null | head -n1)
+        nohup bash -c 'cd *_DD && ./*_DD' &
+        DD_FOLDER=$(ls -d *_DD 2>/dev/null | head -n1)
+        RC_FOLDER=$(ls -d *_RC 2>/dev/null | head -n1)
 
-        # LATEST_LINK=$(python3 getmesya.py)
+        LATEST_LINK=${{ github.event.inputs.name }}
 
-        # python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:Archive/FC2/1.Mirror" "$RC_FOLDER/$RC_FOLDER.conf" 
+        python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:Archive/FC2/1.Mirror" "$RC_FOLDER/$RC_FOLDER.conf" 
 
-        # ls
+        ls
