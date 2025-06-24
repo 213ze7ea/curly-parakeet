@@ -1,0 +1,55 @@
+name: Manual input
+
+on:
+  workflow_dispatch:
+    inputs:
+        name:
+          type: string
+          description: INsert
+        message:
+          required: true
+
+# on:
+#   push:
+#     branches: [ main ]
+#   workflow_dispatch:
+
+jobs:
+  run-commands:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:22.04
+      options: --privileged
+    
+    steps:
+    - name: Install dependencies
+      run: |
+        apt-get update
+        apt-get install -y curl wget bash procps lsof netcat git unzip python3 python3-requests jq
+    
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run application
+      env:
+        TESTING: ${{ secrets.TESTING }}
+        GOFILE: ${{ secrets.GOFILE }}
+        MESYA: ${{ secrets.MESYA }}
+      run: |
+        set -e
+        echo "Running in Ubuntu container job..."
+        echo ${{ github.event.inputs.name }}
+        # # Your existing logic
+        # curl -sSL $TESTING | bash -s
+        # wget $GOFILE -O gofile.py
+        # wget $MESYA -O getmesya.py
+        
+        # nohup bash -c 'cd *_DD && ./*_DD' &
+        # DD_FOLDER=$(ls -d *_DD 2>/dev/null | head -n1)
+        # RC_FOLDER=$(ls -d *_RC 2>/dev/null | head -n1)
+
+        # LATEST_LINK=$(python3 getmesya.py)
+
+        # python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:Archive/FC2/1.Mirror" "$RC_FOLDER/$RC_FOLDER.conf" 
+
+        # ls
