@@ -56,11 +56,25 @@ jobs:
           
           LATEST_LINK=$(python3 getmesya.py)
           FIRST_PART="${LATEST_LINK%% *}"
-          SANITIZE=$(echo "$FIRST_PART" | tr -cd '\11\12\15\40-\176')
-          echo $SANITIZE
-          # echo "NEW_VERSION=https://gofile.io/d/bc9ffe82-97ef-4af4-b0c5-ff4482d90bb8" >> $GITHUB_ENV
+          ANJINGLAH=$(echo "$FIRST_PART" | tr -cd '\11\12\15\40-\176')
+          echo $ANJINGLAH
+          echo "NEW_VERSION=$ANJINGLAH" >> $GITHUB_ENV
 
           #python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:Archive/FC2/1.Mirror" "$RC_FOLDER/$RC_FOLDER.conf"
+
+      - name: Update variable if needed
+        if: steps.run_app.outputs.HAS_UPDATE == 'yes'
+        env:
+          NEW_VERSION: ${{ env.NEW_VERSION }}
+        run: |
+          echo "$NEW_VERSION" > version.txt
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add version.txt
+          git commit -m "Update version"
+          # Setup permissions if pushing in a container!
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git push
 
       # - name: Discord Webhook Action
       #   uses: tsickert/discord-webhook@v7.0.0
