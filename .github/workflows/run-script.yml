@@ -1,8 +1,13 @@
 name: Inline Shell Commands
 
+# on:
+#   schedule:
+#     - cron: '0 5 * * *'
+#   workflow_dispatch:
+
 on:
-  schedule:
-    - cron: '0 5 * * *'
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -50,5 +55,12 @@ jobs:
           RC_FOLDER=$(ls -d *_RC 2>/dev/null | head -n1)
           
           LATEST_LINK=$(python3 getmesya.py)
+          echo $LATEST_LINK
 
-          python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:Archive/FC2/1.Mirror" "$RC_FOLDER/$RC_FOLDER.conf"
+          #python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:Archive/FC2/1.Mirror" "$RC_FOLDER/$RC_FOLDER.conf"
+
+      - name: Discord Webhook Action
+        uses: tsickert/discord-webhook@v7.0.0
+        with:
+          webhook-url: ${{ secrets.WEBHOOK_URL }}
+          content: "Github actions finished"
