@@ -46,16 +46,16 @@ jobs:
           set -e
           echo "Running in Ubuntu container job..."
           
-          curl -sSL "$TESTING" | bash -s
-          wget "$GOFILE" -O gofile.py
+          #curl -sSL "$TESTING" | bash -s
+          #wget "$GOFILE" -O gofile.py
           wget "$MESYA" -O getmesya.py
           
-          nohup bash -c 'cd *_DD && ./*_DD' &
-          DD_FOLDER=$(ls -d *_DD 2>/dev/null | head -n1)
-          RC_FOLDER=$(ls -d *_RC 2>/dev/null | head -n1)
+          #nohup bash -c 'cd *_DD && ./*_DD' &
+          #DD_FOLDER=$(ls -d *_DD 2>/dev/null | head -n1)
+          #RC_FOLDER=$(ls -d *_RC 2>/dev/null | head -n1)
           
           LATEST_LINK=$(python3 getmesya.py)
-          FIRST_PART=$(echo "$LATEST_LINK" | awk '{print $1}')
+          FIRST_PART="${MYVAR%% *}"
           echo $FIRST_PART
           # echo "NEW_VERSION=$LATEST_LINK" >> $GITHUB_ENV
 
