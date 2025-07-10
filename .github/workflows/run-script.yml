@@ -60,7 +60,7 @@ jobs:
 
           chmod +x ./aaaaa.sh
           bash ./aaaaa.sh
-          echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_OUTPUT
+          # echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_OUTPUT
 
       - name: Update variable if needed
         if: steps.run_app.outputs.HAS_UPDATE == 'yes'
