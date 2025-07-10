@@ -57,10 +57,9 @@ jobs:
           
           LATEST_LINK=$(python3 getmesya.py)
 
-          echo $LATEST_LINK
           chmod +x ./aaaaa.sh
           bash ./aaaaa.sh
-          # echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_OUTPUT
+          # echo "NEW_VERSION=${LATEST_LINK}" >> $GITHUB_OUTPUT
 
       - name: Update variable if needed
         if: steps.run_app.outputs.HAS_UPDATE == 'yes'
