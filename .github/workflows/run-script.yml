@@ -56,7 +56,8 @@ jobs:
           RC_FOLDER=$(ls -d *_RC 2>/dev/null | head -n1)
           
           LATEST_LINK=$(python3 getmesya.py)
-          NEW_VERSION=$(echo "$LATEST_LINK" | cut -d'/' -f5)
+          NEW_VERSION=$(echo "$LATEST_LINK" | cut -d' ' -f1)
+          echo $NEW_VERSION
 
           chmod +x ./aaaaa.sh
           bash ./aaaaa.sh
