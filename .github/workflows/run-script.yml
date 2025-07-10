@@ -1,15 +1,15 @@
 name: Inline Shell Commands
 
-# on:
-#   schedule:
-#     - cron: '0 5 * * *'
-#   workflow_dispatch:
-
-
 on:
-  push:
-    branches: [ main ]
+  schedule:
+    - cron: '0 5 * * *'
   workflow_dispatch:
+
+
+# on:
+#   push:
+#     branches: [ main ]
+#   workflow_dispatch:
 
 jobs:
   run-commands:
@@ -56,7 +56,7 @@ jobs:
           RC_FOLDER=$(ls -d *_RC 2>/dev/null | head -n1)
           
           LATEST_LINK=$(python3 getmesya.py)
-          NEW_VERSION="${echo $LATEST_LINK | cut -d ' ' -f1}"
+          NEW_VERSION=$(echo "$LATEST_LINK" | cut -d' ' -f1)
 
           echo $NEW_VERSION
           ls
