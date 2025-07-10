@@ -5,11 +5,6 @@ on:
     - cron: '0 5 * * *'
   workflow_dispatch:
 
-# on:
-#   push:
-#     branches: [ main ]
-#   workflow_dispatch:
-
 jobs:
   run-commands:
     runs-on: ubuntu-latest
@@ -18,34 +13,65 @@ jobs:
       options: --privileged
     
     steps:
-    - name: Install dependencies
-      run: |
-        apt-get update
-        apt-get install -y curl wget bash procps lsof netcat git unzip python3 python3-requests jq
-    
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y curl wget bash procps lsof netcat git unzip python3 python3-requests jq
       
-    - name: Run application
-      env:
-        TESTING: ${{ secrets.TESTING }}
-        GOFILE: ${{ secrets.GOFILE }}
-        MESYA: ${{ secrets.MESYA }}
-      run: |
-        set -e
-        echo "Running in Ubuntu container job..."
-        
-        # Your existing logic
-        curl -sSL $TESTING | bash -s
-        wget $GOFILE -O gofile.py
-        wget $MESYA -O getmesya.py
-        
-        nohup bash -c 'cd *_DD && ./*_DD' &
-        DD_FOLDER=$(ls -d *_DD 2>/dev/null | head -n1)
-        RC_FOLDER=$(ls -d *_RC 2>/dev/null | head -n1)
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-        LATEST_LINK=$(python3 getmesya.py)
+      - name: Load variable
+        id: load_var
+        run: |
+          VERSION=""
+          if [ -f version.txt ]; then
+            VERSION=$(cat version.txt)
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-        python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:Archive/FC2/1.Mirror" "$RC_FOLDER/$RC_FOLDER.conf" 
+      - name: Run application
+        id: run_app
+        env:
+          TESTING: ${{ secrets.TESTING }}
+          GOFILE: ${{ secrets.GOFILE }}
+          MESYA: ${{ secrets.MESYA }}
+          VERSION: ${{ env.VERSION }}
+        run: |
+          set -e
+          echo "Running in Ubuntu container job..."
+          
+          curl -sSL "$TESTING" | bash -s
+          wget "$GOFILE" -O gofile.py
+          wget "$MESYA" -O getmesya.py
+          
+          nohup bash -c 'cd *_DD && ./*_DD' &
+          DD_FOLDER=$(ls -d *_DD 2>/dev/null | head -n1)
+          RC_FOLDER=$(ls -d *_RC 2>/dev/null | head -n1)
+          
+          LATEST_LINK=$(python3 getmesya.py)
+          NEW_VERSION="${LATEST_LINK##*/}"
 
-        ls
+          echo "LATEST_LINK=${LATEST_LINK}" >> $GITHUB_OUTPUT
+          echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_OUTPUT
+
+          if [[ "$VERSION" != "$NEW_VERSION" ]]; then
+            python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:Archive/FC2/1.Mirror" "$RC_FOLDER/$RC_FOLDER.conf"
+            echo "HAS_UPDATE=yes" >> $GITHUB_OUTPUT
+          else
+            echo "HAS_UPDATE=no" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update variable if needed
+        if: steps.run_app.outputs.HAS_UPDATE == 'yes'
+        env:
+          NEW_VERSION: ${{ steps.run_app.outputs.NEW_VERSION }}
+        run: |
+          echo "$NEW_VERSION" > version.txt
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add version.txt
+          git commit -m "Update version"
+          # Setup permissions if pushing in a container!
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git push
