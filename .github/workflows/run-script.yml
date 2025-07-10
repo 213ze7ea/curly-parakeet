@@ -56,11 +56,14 @@ jobs:
           
           LATEST_LINK=$(python3 getmesya.py)
           echo $LATEST_LINK
+          echo "NEW_VERSION=$LATEST_LINK" >> $GITHUB_ENV
 
           #python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:Archive/FC2/1.Mirror" "$RC_FOLDER/$RC_FOLDER.conf"
 
       - name: Discord Webhook Action
         uses: tsickert/discord-webhook@v7.0.0
+        env:
+          NEW_VERSION: ${{ env.NEW_VERSION }}
         with:
           webhook-url: ${{ secrets.WEBHOOK_URL }}
-          content: "Github actions finished"
+          content: "Github actions finished $NEW_VERSION"
