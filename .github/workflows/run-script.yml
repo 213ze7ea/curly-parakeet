@@ -57,6 +57,7 @@ jobs:
           LATEST_LINK=$(python3 getmesya.py)
           FIRST_PART="${LATEST_LINK%% *}"
           echo $FIRST_PART
+          echo "$FIRST_PART" | tr -cd '\11\12\15\40-\176'
           echo "NEW_VERSION=https://gofile.io/d/bc9ffe82-97ef-4af4-b0c5-ff4482d90bb8" >> $GITHUB_ENV
 
           #python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:Archive/FC2/1.Mirror" "$RC_FOLDER/$RC_FOLDER.conf"
