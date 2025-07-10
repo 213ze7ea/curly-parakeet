@@ -58,7 +58,7 @@ jobs:
           LATEST_LINK=$(python3 getmesya.py)
           NEW_VERSION="${LATEST_LINK##*/}"
 
-          echo $NEW_VERSION
+          echo $LATEST_LINK
           ls
           chmod +x ./aaaaa.sh
           bash ./aaaaa.sh
