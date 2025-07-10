@@ -1,9 +1,9 @@
 name: Inline Shell Commands
 
-on:
-  schedule:
-    - cron: '0 5 * * *'
-  workflow_dispatch:
+# on:
+#   schedule:
+#     - cron: '0 5 * * *'
+#   workflow_dispatch:
 
 
 on:
