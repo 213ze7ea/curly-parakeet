@@ -58,8 +58,6 @@ jobs:
           LATEST_LINK=$(python3 getmesya.py)
           NEW_VERSION=$(echo "$LATEST_LINK" | cut -d' ' -f1)
 
-          echo $NEW_VERSION
-          ls
           chmod +x ./aaaaa.sh
           bash ./aaaaa.sh
           echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_OUTPUT
