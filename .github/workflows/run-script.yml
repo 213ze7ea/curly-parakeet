@@ -15,31 +15,40 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ubuntu:22.04
-      options: --privileged
-    
+
     steps:
+      # 1. Install git FIRST (before checkout)
       - name: Install git
         run: |
           apt-get update
           apt-get install -y git
 
+      # 2. Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 3. Install other dependencies
       - name: Install dependencies
         run: |
           apt-get update
           apt-get install -y curl wget bash procps lsof netcat unzip python3 python3-requests jq
 
-      - name: Debug directory
+      # 4. Create a new file as an example
+      - name: Create file
         run: |
-          echo "PWD: $PWD"
-          ls -la
-          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-          test -d .git && echo ".git exists" || echo ".git missing"
-
-      - name: Run application
-        run: |
-          set -e
           cd "$GITHUB_WORKSPACE"
-          git status
+          echo "This is a test file created on $(date)" > newfile.txt
+          echo "Contents of dir after new file:"
+          ls -l
+
+      # 5. Add, commit, and push changes
+      - name: Add, commit, and push
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add newfile.txt       # Or 'git add .' for all new/changed files
+          git commit -m "Add newfile.txt"
+          # Use token for push
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          git push
