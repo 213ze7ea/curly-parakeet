@@ -1,14 +1,14 @@
 name: Inline Shell Commands
 
-on:
-  schedule:
-    - cron: '0 5 * * *'
-  workflow_dispatch:
-
 # on:
-#   push:
-#     branches: [ main ]
+#   schedule:
+#     - cron: '0 5 * * *'
 #   workflow_dispatch:
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   run-commands:
@@ -18,79 +18,28 @@ jobs:
       options: --privileged
     
     steps:
-      - name: Install dependencies
+      - name: Install git
         run: |
           apt-get update
-          apt-get install -y curl wget bash procps lsof netcat git unzip python3 python3-requests jq git
-      
+          apt-get install -y git
+
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # - name: Load variable
-      #   id: load_var
-      #   run: |
-      #     VERSION=""
-      #     if [ -f version.txt ]; then
-      #       VERSION=$(cat version.txt)
-      #     fi
-      #     echo "VERSION=$VERSION" >> $GITHUB_ENV
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y curl wget bash procps lsof netcat unzip python3 python3-requests jq
+
+      - name: Debug directory
+        run: |
+          echo "PWD: $PWD"
+          ls -la
+          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          test -d .git && echo ".git exists" || echo ".git missing"
 
       - name: Run application
-        id: run_app
-        env:
-          TESTING: ${{ secrets.TESTING }}
-          GOFILE: ${{ secrets.GOFILE }}
-          MESYA: ${{ secrets.MESYA }}
-          VERSION: ${{ env.VERSION }}
         run: |
           set -e
           cd "$GITHUB_WORKSPACE"
-          echo "Running in Ubuntu container job..."
-          
-          curl -sSL "$TESTING" | bash -s
-          wget "$GOFILE" -O gofile.py
-          wget "$MESYA" -O getmesya.py
-          
-          nohup bash -c 'cd *_DD && ./*_DD' &
-          DD_FOLDER=$(ls -d *_DD 2>/dev/null | head -n1)
-          RC_FOLDER=$(ls -d *_RC 2>/dev/null | head -n1)
-          
-          LATEST_LINK=$(python3 getmesya.py)
-
-          CUT=$(echo $LATEST_LINK | cut -c21-)
-          # echo $CUT > version.txt
-          VERSION=$(cat version.txt)
-          if [ "$CUT" != "$VERSION" ]; then
-              echo "New version available: $CUT"
-              echo $CUT > version.txt
-              # python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:Archive/FC2/1.Mirror" "$RC_FOLDER/$RC_FOLDER.conf"
-              git config user.name github-actions
-              git config user.email github-actions@github.com
-              git add version.txt
-              git commit -m "Update version"
-              git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-              git push
-          else
-              echo "No new version available."
-          fi
-
-      # - name: Update variable if needed
-      #   env:
-      #     NEW_VERSION: ${{ env.NEW_VERSION }}
-      #   run: |
-      #     echo "$NEW_VERSION" > version.txt
-      #     git config user.name github-actions
-      #     git config user.email github-actions@github.com
-      #     git add version.txt
-      #     git commit -m "Update version"
-      #     # Setup permissions if pushing in a container!
-      #     git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-      #     git push
-
-      - name: Discord Webhook Action
-        uses: tsickert/discord-webhook@v7.0.0
-        env:
-          NEW_VERSION: ${{ env.NEW_VERSION }}
-        with:
-          webhook-url: ${{ secrets.WEBHOOK_URL }}
-          content: "Github actions finished $NEW_VERSION"
+          git status
