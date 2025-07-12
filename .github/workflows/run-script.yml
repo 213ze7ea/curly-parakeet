@@ -44,6 +44,7 @@ jobs:
           VERSION: ${{ env.VERSION }}
         run: |
           set -e
+          cd "$GITHUB_WORKSPACE"
           echo "Running in Ubuntu container job..."
           
           curl -sSL "$TESTING" | bash -s
@@ -57,17 +58,16 @@ jobs:
           LATEST_LINK=$(python3 getmesya.py)
 
           CUT=$(echo $LATEST_LINK | cut -c21-)
-          # echo $CUT > versions.txt
-          VERSION=$(cat versions.txt)
+          # echo $CUT > version.txt
+          VERSION=$(cat version.txt)
           if [ "$CUT" != "$VERSION" ]; then
               echo "New version available: $CUT"
-              echo $CUT > versions.txt
+              echo $CUT > version.txt
               # python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:Archive/FC2/1.Mirror" "$RC_FOLDER/$RC_FOLDER.conf"
               git config user.name github-actions
               git config user.email github-actions@github.com
               git add version.txt
               git commit -m "Update version"
-              # Setup permissions if pushing in a container!
               git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
               git push
           else
