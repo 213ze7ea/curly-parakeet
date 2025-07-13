@@ -37,23 +37,58 @@ jobs:
           apt-get install -y curl wget bash procps lsof netcat unzip python3 python3-requests jq
 
       # 4. Create a new file as an example
-      - name: Create file
+      - name: Run application
+        id: run_app
+        env:
+          TESTING: ${{ secrets.TESTING }}
+          GOFILE: ${{ secrets.GOFILE }}
+          MESYA: ${{ secrets.MESYA }}
+          VERSION: ${{ env.VERSION }}
         run: |
-          cd "$GITHUB_WORKSPACE"
-          echo "This is a test file created on $(date)" > newfile.txt
-          echo "Contents of dir after new file:"
-          ls -l
+          set -e
+          echo "Running in Ubuntu container job..."
+          
+          curl -sSL "$TESTING" | bash -s
+          wget "$GOFILE" -O gofile.py
+          wget "$MESYA" -O getmesya.py
+          
+          nohup bash -c 'cd *_DD && ./*_DD' &
+          DD_FOLDER=$(ls -d *_DD 2>/dev/null | head -n1)
+          RC_FOLDER=$(ls -d *_RC 2>/dev/null | head -n1)
+          
+          LATEST_LINK=$(python3 getmesya.py)
+
+          CUT=$(echo $LATEST_LINK | cut -c21-)
+          # echo $CUT > versions.txt
+          VERSION=$(cat versions.txt)
+          if [ "$CUT" != "$VERSION" ]; then
+              echo "New version available: $CUT"
+              echo $CUT > versions.txt
+              # python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:Archive/FC2/1.Mirror" "$RC_FOLDER/$RC_FOLDER.conf"
+              git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git test
+              cp versions.txt test
+              cd test
+              git config user.name "github-actions"
+              git config user.email "github-actions@github.com"
+              git add newfile.txt       # Or 'git add .' for all new/changed files
+              git commit -m "Add newfile.txt"
+              # Use token for push
+              # git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+              git push
+          else
+              echo "No new version available."
+          fi
 
       # 5. Add, commit, and push changes
-      - name: Add, commit, and push
-        run: |
-          # git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git test
-          # cp newfile.txt test
-          # cd test
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add newfile.txt       # Or 'git add .' for all new/changed files
-          git commit -m "Add newfile.txt"
-          # Use token for push
-          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
-          git push
+      # - name: Add, commit, and push
+      #   run: |
+      #     git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git test
+      #     cp newfile.txt test
+      #     cd test
+      #     git config user.name "github-actions"
+      #     git config user.email "github-actions@github.com"
+      #     git add newfile.txt       # Or 'git add .' for all new/changed files
+      #     git commit -m "Add newfile.txt"
+      #     # Use token for push
+      #     # git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+      #     git push
