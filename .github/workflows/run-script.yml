@@ -1,14 +1,14 @@
 name: Inline Shell Commands
 
-# on:
-#   schedule:
-#     - cron: '0 5 * * *'
-#   workflow_dispatch:
-
 on:
-  push:
-    branches: [ main ]
+  schedule:
+    - cron: '0 5 * * *'
   workflow_dispatch:
+
+# on:
+#   push:
+#     branches: [ main ]
+#   workflow_dispatch:
 
 permissions:
   contents: write
