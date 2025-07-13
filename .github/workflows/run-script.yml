@@ -47,13 +47,13 @@ jobs:
       # 5. Add, commit, and push changes
       - name: Add, commit, and push
         run: |
-          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git test
-          cp newfile.txt test
-          cd test
+          # git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git test
+          # cp newfile.txt test
+          # cd test
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add newfile.txt       # Or 'git add .' for all new/changed files
           git commit -m "Add newfile.txt"
           # Use token for push
-          # git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
           git push
