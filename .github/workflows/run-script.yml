@@ -59,19 +59,18 @@ jobs:
           LATEST_LINK=$(python3 getmesya.py)
 
           CUT=$(echo $LATEST_LINK | cut -c21-)
-          # echo $CUT > versions.txt
-          VERSION=$(cat versions.txt)
+          VERSION=$(cat version.txt)
           if [ "$CUT" != "$VERSION" ]; then
               echo "New version available: $CUT"
-              echo $CUT > versions.txt
+              echo $CUT > version.txt
               # python3 gofile.py "$LATEST_LINK" "$RC_FOLDER/$RC_FOLDER" "$DD_FOLDER:Archive/FC2/1.Mirror" "$RC_FOLDER/$RC_FOLDER.conf"
               git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git test
-              cp versions.txt test
+              cp version.txt test
               cd test
               git config user.name "github-actions"
               git config user.email "github-actions@github.com"
-              git add newfile.txt       # Or 'git add .' for all new/changed files
-              git commit -m "Add newfile.txt"
+              git add version.txt       # Or 'git add .' for all new/changed files
+              git commit -m "Add version.txt"
               # Use token for push
               # git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
               git push
